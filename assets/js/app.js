@@ -13,7 +13,12 @@ function updateThemeIcon(){
   const btn = document.getElementById('themeToggle');
   if(!btn) return;
   const cur = root.getAttribute('data-theme');
-  btn.textContent = cur === 'dark' ? '☀️' : '🌙';
+  // минималистичные иконки: на темной - кремовая, на светлой - темная (через currentColor)
+  const sun = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2M12 19.5v2M4.8 4.8l1.4 1.4M17.8 17.8l1.4 1.4M2.5 12h2M19.5 12h2M4.8 19.2l1.4-1.4M17.8 6.2l1.4-1.4"/></svg>`;
+  const moon = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 14.2A6.5 6.5 0 0 1 9.8 6.5a7 7 0 1 0 7.7 7.7Z"/></svg>`;
+  btn.innerHTML = cur === 'dark' ? sun : moon;
+  btn.style.color = cur === 'dark' ? 'var(--text)' : 'var(--text)';
+  btn.setAttribute('aria-label', cur === 'dark' ? 'Светлая тема' : 'Темная тема');
 }
 document.addEventListener('DOMContentLoaded', ()=>{
   updateThemeIcon();
@@ -83,7 +88,7 @@ function cardHTML(p, color='brown'){
 
 function renderBestsellers(){
   const grid = document.getElementById('bestsellers');
-  const ids = ['messenger','passport','cardholder','glasses'];
+  const ids = ['banana','passport','cardholder','glasses'];
   const list = ids.map(id=> PRODUCTS.find(p=> p.id===id)).filter(Boolean);
   grid.innerHTML = list.map(p=> cardHTML(p)).join('');
   // rebind order buttons inside grid
@@ -116,7 +121,7 @@ function renderCatalog(){
 
 function renderProduct(){
   const params = new URLSearchParams(location.search);
-  const id = params.get('id') || 'messenger';
+  const id = params.get('id') || 'banana';
   const product = PRODUCTS.find(p=> p.id===id) || PRODUCTS[0];
   let color = params.get('color') || product.colors[0];
   if(!product.colors.includes(color)) color = product.colors[0];
@@ -169,11 +174,6 @@ function renderProduct(){
         ${Object.entries(product.specs).map(([k,v])=> `<div class="specs__row"><span>${k}</span><span>${v}</span></div>`).join('')}
         <div class="specs__row"><span>Доставка</span><span>СДЭК по РФ</span></div>
         <div class="specs__row"><span>Гарантия</span><span>12 месяцев</span></div>
-      </div>
-
-      <div class="reviews">
-        <strong style="color:var(--text)">Отзывы</strong><br/>
-        Скоро здесь появятся отзывы покупателей. Хочешь оставить первый — напиши в Telegram после покупки.
       </div>
     </div>`;
 
